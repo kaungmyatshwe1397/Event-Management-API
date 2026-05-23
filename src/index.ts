@@ -1,9 +1,10 @@
-import express, { urlencoded } from "express";
+import express from "express";
 import concertRoute from "./routes/concert.route";
 import reservationRoute from "./routes/reservation.route";
 import purchaseRoute from "./routes/purchase.route";
 import "reflect-metadata";
 import { AppDataSource } from "./database/data-source";
+import "./cron-tasks/restock-unprchased-tickets";
 
 const app = express();
 const port = 3000;

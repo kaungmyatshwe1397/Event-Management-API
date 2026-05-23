@@ -12,7 +12,7 @@ export class Ticket{
     concertId:number
 
     @Column()
-    status:'PENDING' | 'COMPLETED'
+    status:'AVAILABLE'|'PENDING' | 'COMPLETED'
 
     @Column()
     createAt:Date
