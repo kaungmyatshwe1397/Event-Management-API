@@ -5,31 +5,56 @@ import { Concert } from "../entities/concert";
 
 const router = Router();
 
-router.post('/',async (req,res)=>{
-    // user and concert id must include in request body
-    const {userId , concertId} = req.body;
+router.post("/", async (req, res) => {
+  // user and concert id must include in request body
+  const { userId, concertId } = req.body;
+  const queryRunner = AppDataSource.createQueryRunner();
+
+  // Connect a door for  data transaction and start to prevent race conditon
+  await queryRunner.connect();
+  await queryRunner.startTransaction();
+
+  // Write all logic event that want in bundle write inside of this
+  try {
     // Find and select the wanted concert by using concert id
-    const selectedConcert =  await AppDataSource.getRepository(Concert).findOne({
-        where: { id: concertId }
-    });
+    const selectedConcert =
+      await queryRunner.manager.findOne(Concert, {
+        where: { id: concertId },
+      });
     // If there is no concert or concert have no ticket, return this
-    if(!selectedConcert || selectedConcert.stock == 0){
-        return res.status(400).json({message:"Concert is sold out"})
-    };
+    if (!selectedConcert || selectedConcert.stock == 0) {
+      await queryRunner.rollbackTransaction();
+      return res.status(400).json({ message: "Concert is sold out" });
+    }
     // If concert is there and ticket is reserved , decrease ticket stock count from that concert
     selectedConcert.stock -= 1;
 
-    // Update the concert state 
-    await AppDataSource.getRepository(Concert).save(selectedConcert);
+    // Update the concert state
+    await queryRunner.manager.save(
+      Concert,
+      selectedConcert,
+    );
     // Create a new ticket for user for selectecd concert by using ticket entities
-    await AppDataSource.getRepository(Ticket).save({
-        userId:userId,
-        concertId:concertId,
-        status:'PENDING',
-        category:'Basic',
-        createAt:new Date()
-    })
-    res.json({message:"ticket is reserved."})
+    await queryRunner.manager.save(Ticket, {
+      userId: userId,
+      concertId: concertId,
+      status: "PENDING",
+      category: "Basic",
+      createAt: new Date(),
+    });
+    // The whole bundle process is success and do transaction commiting
+    await queryRunner.commitTransaction();
+    res.json({ message: "ticket is reserved." });
+  } 
+  // Roll back error happen in one of the things (ALL or Nothing)
+  catch (error) {
+    await queryRunner.rollbackTransaction();
+    res.status(500).json({ message: "Ticket reservation failed!!!" });
+  } 
+  // Leave from lock transaction
+  finally {
+    await queryRunner.release();
+  }
 });
 
 export default router;
