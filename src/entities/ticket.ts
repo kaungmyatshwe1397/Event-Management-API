@@ -13,4 +13,7 @@ export class Ticket{
 
     @Column()
     createAt:Date
+
+    @Column()
+    category: 'VIP' | 'Basic' 
 }
