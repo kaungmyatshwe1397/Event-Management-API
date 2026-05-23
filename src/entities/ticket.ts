@@ -6,7 +6,10 @@ export class Ticket{
     id:number
 
     @Column()
-    userId:string
+    userId:number
+
+    @Column()
+    concertId:number
 
     @Column()
     status:'PENDING' | 'COMPLETED'

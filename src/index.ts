@@ -1,4 +1,4 @@
-import express from "express";
+import express, { urlencoded } from "express";
 import concertRoute from "./routes/concert.route";
 import reservationRoute from './routes/reservation.route';
 import 'reflect-metadata';
@@ -6,6 +6,8 @@ import { AppDataSource } from "./database/data-source";
 
 const app = express();
 const port = 3000;
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 
 app.get('/',(req,res)=>{
     res.send('Hello,World');
