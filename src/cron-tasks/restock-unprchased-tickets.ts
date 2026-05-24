@@ -5,7 +5,7 @@ import { LessThan } from "typeorm";
 import { Concert } from "../entities/concert";
 
 // Check for every 1 min
-cron.schedule("*/1 * * * *", async () => {
+cron.schedule("*/3 * * * *", async () => {
   console.log("Checking ticket reservation state ...");
 
   // Find pending ticket that reserved 5 min ago
