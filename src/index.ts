@@ -5,6 +5,7 @@ import purchaseRoute from "./routes/purchase.route";
 import "reflect-metadata";
 import { AppDataSource } from "./database/data-source";
 import "./cron-tasks/restock-unprchased-tickets";
+import { correlationIdMiddleware } from "./middlewares/correlationId";
 
 const app = express();
 const port = 3000;
@@ -14,6 +15,8 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.send("Hello,World");
 });
+
+app.use(correlationIdMiddleware);
 
 app.use("/concerts", concertRoute);
 app.use("/reserves", reservationRoute);
