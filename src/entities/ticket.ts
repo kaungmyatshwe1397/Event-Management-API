@@ -1,22 +1,25 @@
-import { Entity,Column,PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, Index } from "typeorm";
 
 @Entity()
-export class Ticket{
-    @PrimaryGeneratedColumn()
-    id:number
+export class Ticket {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    userId:number
+  @Column()
+  userId: number;
 
-    @Column()
-    concertId:number
+  @Index("idx_ticket_concert_id")
+  @Column()
+  concertId: number;
 
-    @Column()
-    status:'AVAILABLE'|'PENDING' | 'COMPLETED'
+  // Partial indexing for searching database row where status is "PENDING"
+  @Index("idx_ticket_pending_status",{where:`"status"='PENDING'`})
+  @Column()
+  status: "AVAILABLE" | "PENDING" | "COMPLETED";
 
-    @Column()
-    createAt:Date
+  @Column()
+  createAt: Date;
 
-    @Column()
-    category: 'VIP' | 'Basic' 
+  @Column()
+  category: "VIP" | "Basic";
 }
