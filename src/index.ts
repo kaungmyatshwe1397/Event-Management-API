@@ -1,4 +1,5 @@
 import express from "express";
+import userRoute from "./routes/user.route";
 import concertRoute from "./routes/concert.route";
 import reservationRoute from "./routes/reservation.route";
 import purchaseRoute from "./routes/purchase.route";
@@ -19,6 +20,7 @@ app.get("/", (req, res) => {
 
 app.use(correlationIdMiddleware);
 
+app.use("/users",userRoute);
 app.use("/concerts", concertRoute);
 app.use("/reserves", reservationRoute);
 app.use("/purchases",purchaseRoute);

@@ -11,3 +11,5 @@ export const reserveSchema = z.object({
 export const purchaseSchema = z.object({
     ticketId:z.number(),
 })
+
+export const statusSchema = z.enum(['AVAILABLE','PENDING','COMPLETED']);
