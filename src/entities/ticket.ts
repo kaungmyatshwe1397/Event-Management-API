@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, Index, VersionColumn } from "typeorm";
 
 @Entity()
 export class Ticket {
@@ -22,4 +22,11 @@ export class Ticket {
 
   @Column()
   category: "VIP" | "Basic";
+
+  // Set nullable true to prevent database panics , and set value of this new column to null for existing data
+  @Column({nullable:true})
+  internal_note: string;
+
+  @VersionColumn({default:1})
+  version:number;
 }
