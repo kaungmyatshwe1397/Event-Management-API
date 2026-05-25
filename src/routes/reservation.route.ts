@@ -3,10 +3,12 @@ import { AppDataSource } from "../database/data-source";
 import { Ticket } from "../entities/ticket";
 import { Concert } from "../entities/concert";
 import { getLogger } from "../logger";
+import { validationMiddleware } from "../middlewares/validate";
+import { reserveSchema } from "../schemas/schema";
 
 const router = Router();
 
-router.post("/", async (req, res) => {
+router.post("/", validationMiddleware(reserveSchema) ,async (req, res) => {
   // user and concert id must include in request body
   const { userId, concertId } = req.body;
   const queryRunner = AppDataSource.createQueryRunner();

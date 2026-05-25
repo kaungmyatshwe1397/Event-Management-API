@@ -1,10 +1,12 @@
 import { Router } from "express";
 import { AppDataSource } from "../database/data-source";
 import { Ticket } from "../entities/ticket";
+import { validationMiddleware } from "../middlewares/validate";
+import { purchaseSchema } from "../schemas/schema";
 
 const router = Router();
 // Purchasing ticket
-router.post("/", async(req , res)=>{
+router.post("/", validationMiddleware(purchaseSchema),async(req , res)=>{
     const ticketId = req.body.ticketId;
     // Check ticket is reseverd or not by pending status , and it match id from request body or not
     const purchasedTicket = await AppDataSource.getRepository(Ticket).findOne({
