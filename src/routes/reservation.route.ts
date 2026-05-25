@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
     // If there is no concert or concert have no ticket, return this
     if (!selectedConcert || selectedConcert.stock == 0) {
       await queryRunner.rollbackTransaction();
-      return res.status(400).json({ message: "Concert is sold out" });
+      return res.status(400).json({ message: "There is no valid concerts or concert with valid tickets" });
     }
     // If concert is there and ticket is reserved , decrease ticket stock count from that concert
     selectedConcert.stock -= 1;
@@ -46,8 +46,9 @@ router.post("/", async (req, res) => {
   } catch (error) {
     // Roll back error happen in one of the things (ALL or Nothing)
     await queryRunner.rollbackTransaction();
-    getLogger().warn("Reservation failed!!!");
-    res.status(500).json({ message: "Ticket reservation failed!!!" });
+    // getLogger().warn("Reservation failed!!!");
+    // res.status(500).json({ message: "Ticket reservation failed!!!" });
+    throw error;
   } finally {
     // Leave from lock transaction
     await queryRunner.release();
