@@ -2,13 +2,13 @@ import { Router } from "express";
 import { AppDataSource } from "../database/data-source";
 import { Ticket } from "../entities/ticket";
 import { ticketDto } from "../dtos/ticketDtos";
-import { statusSchema } from "../schemas/schema";
+import { statusSchema } from "../libs/schema";
 
 const router = Router();
 
 // Get all tickets which are purchase by user
 router.get("/:id/tickets", async (req, res) => {
-    // Get user id and ticket status and use it to find tickets
+  // Get user id and ticket status and use it to find tickets
   const id = Number(req.params.id);
   const status = statusSchema.parse(req.query.status) ?? "COMPLETED";
   const userTickets = await AppDataSource.getRepository(Ticket).find({

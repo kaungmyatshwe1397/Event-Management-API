@@ -2,7 +2,7 @@ import { Router } from "express";
 import { AppDataSource } from "../database/data-source";
 import { Ticket } from "../entities/ticket";
 import { validationMiddleware } from "../middlewares/validate";
-import { purchaseSchema } from "../schemas/schema";
+import { purchaseSchema } from "../libs/schema";
 
 const router = Router();
 // Purchasing ticket

@@ -2,13 +2,13 @@ import { Router } from "express";
 import { AppDataSource } from "../database/data-source";
 import { Ticket } from "../entities/ticket";
 import { Concert } from "../entities/concert";
-import { getLogger } from "../logger";
+import { getLogger } from "../libs/logger";
 import { validationMiddleware } from "../middlewares/validate";
-import { reserveSchema } from "../schemas/schema";
+import { reserveSchema } from "../libs/schema";
 
 const router = Router();
 
-router.post("/", validationMiddleware(reserveSchema) ,async (req, res) => {
+router.post("/", validationMiddleware(reserveSchema), async (req, res) => {
   // user and concert id must include in request body
   const { userId, concertId } = req.body;
   const queryRunner = AppDataSource.createQueryRunner();
@@ -27,7 +27,9 @@ router.post("/", validationMiddleware(reserveSchema) ,async (req, res) => {
     // If there is no concert or concert have no ticket, return this
     if (!selectedConcert || selectedConcert.stock == 0) {
       await queryRunner.rollbackTransaction();
-      return res.status(400).json({ message: "There is no valid concerts or concert with valid tickets" });
+      return res.status(400).json({
+        message: "There is no valid concerts or concert with valid tickets",
+      });
     }
     // If concert is there and ticket is reserved , decrease ticket stock count from that concert
     selectedConcert.stock -= 1;
