@@ -8,7 +8,7 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "//": "when you use **migration:generate** script, use it like this =>                        **npm run migration:generate --src/migrations/(custom-name).ts**",
+    "//": "when you use **migration:generate** script, use it like this =>                        **npm run migration:generate --src/migrations/(custom-name)**",
     "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/database/data-source.ts",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/database/data-source.ts",
     "seed": "ts-node-dev src/database/seed.ts"
