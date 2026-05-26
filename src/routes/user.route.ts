@@ -6,7 +6,7 @@ import { statusSchema } from "../libs/schema";
 
 const router = Router();
 
-// Get all tickets which are purchase by user
+// Get all tickets which are purchased by user
 router.get("/:id/tickets", async (req, res) => {
   // Get user id and ticket status and use it to find tickets
   const id = Number(req.params.id);
