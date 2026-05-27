@@ -1,4 +1,4 @@
-import { Entity,Column,PrimaryGeneratedColumn } from "typeorm";
+import { Entity,Column,PrimaryGeneratedColumn, VersionColumn } from "typeorm";
 
 @Entity()
 export class Concert{
@@ -10,4 +10,7 @@ export class Concert{
 
     @Column()
     stock:number
+
+    @VersionColumn({default:1})
+    version:number;
 }

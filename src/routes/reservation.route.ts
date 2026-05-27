@@ -25,6 +25,7 @@ router.post("/",reserveRateLimiter,validationMiddleware(reserveSchema), async (r
     const selectedConcert = await queryRunner.manager.findOne(Concert, {
       where: { id: concertId },
     });
+    
     // If there is no concert or concert have no ticket, return this
     if (!selectedConcert || selectedConcert.stock == 0) {
       await queryRunner.rollbackTransaction();
@@ -36,7 +37,7 @@ router.post("/",reserveRateLimiter,validationMiddleware(reserveSchema), async (r
     selectedConcert.stock -= 1;
 
     // Update the concert state
-    await queryRunner.manager.save(Concert, selectedConcert);
+    await queryRunner.manager.save(selectedConcert);
     // Create a new ticket for user for selectecd concert by using ticket entities
     await queryRunner.manager.save(Ticket, {
       userId: userId,
@@ -51,8 +52,6 @@ router.post("/",reserveRateLimiter,validationMiddleware(reserveSchema), async (r
   } catch (error) {
     // Roll back error happen in one of the things (ALL or Nothing)
     await queryRunner.rollbackTransaction();
-    // getLogger().warn("Reservation failed!!!");
-    // res.status(500).json({ message: "Ticket reservation failed!!!" });
     throw error;
   } finally {
     // Leave from lock transaction
