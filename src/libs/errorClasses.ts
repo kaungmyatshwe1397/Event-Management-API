@@ -13,14 +13,14 @@ export class AppError extends Error {
 // Use base class and build a class for confict error
 export class ConflictError extends AppError{
     constructor(message = "Ticket must be soldout or Conflicts happened.Please Try Again."){
-        super(409,"Conflict",message);
+        super(409,"CONFLICT",message);
     }
 }
 
 // Use base class and build a class for not found error
 export class NotFoundError extends AppError{
     constructor(message:"Resource is not found."){
-        super(404,"Not Found",message);
+        super(404,"NOT_FOUND",message);
     }
 }
 

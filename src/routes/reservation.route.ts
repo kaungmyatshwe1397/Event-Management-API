@@ -6,12 +6,13 @@ import { getLogger } from "../libs/logger";
 import { validationMiddleware } from "../middlewares/validate";
 import { reserveSchema } from "../libs/schema";
 import { reserveRateLimiter } from "../middlewares/rate-limit";
+import { ConflictError } from "../libs/errorClasses";
 
 const router = Router();
 
 router.post("/",reserveRateLimiter,validationMiddleware(reserveSchema), async (req, res) => {
   // user and concert id must include in request body
-  const { userId, concertId } = req.body;
+  const { userId, concertId,quantity } = req.body;
   const queryRunner = AppDataSource.createQueryRunner();
 
   // Connect a door for  data transaction and start to prevent race conditon
@@ -21,23 +22,18 @@ router.post("/",reserveRateLimiter,validationMiddleware(reserveSchema), async (r
   // Write all logic event that want in bundle write inside of this
   try {
     getLogger().info("Ticket reservation request received.");
-    // Find and select the wanted concert by using concert id
-    const selectedConcert = await queryRunner.manager.findOne(Concert, {
-      where: { id: concertId },
-    });
     
-    // If there is no concert or concert have no ticket, return this
-    if (!selectedConcert || selectedConcert.stock == 0) {
-      await queryRunner.rollbackTransaction();
-      return res.status(400).json({
-        message: "There is no valid concerts or concert with valid tickets",
-      });
-    }
-    // If concert is there and ticket is reserved , decrease ticket stock count from that concert
-    selectedConcert.stock -= 1;
+    // Use atomic update for ticket reservation in DB not in JS math with fetch,calculate and upate
+    const updateConcertTicketStock = await queryRunner.manager.createQueryBuilder()
+    .update(Concert)
+    .set({stock:()=>"stock - :quantity"})
+    .where("id=:id AND stock >= :quantity",{id:concertId,quantity:quantity})
+    .execute()
 
-    // Update the concert state
-    await queryRunner.manager.save(selectedConcert);
+    if(updateConcertTicketStock.affected == 0 ){
+      throw new ConflictError("No Available ticket to reserve for this concert.")
+    }
+   
     // Create a new ticket for user for selectecd concert by using ticket entities
     await queryRunner.manager.save(Ticket, {
       userId: userId,
