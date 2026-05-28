@@ -5,8 +5,8 @@ export class Ticket {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  userId: number;
+  @Column({nullable:true , type:"integer"})
+  userId: number | null;
 
   @Index("idx_ticket_concert_id")
   @Column()
