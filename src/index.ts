@@ -8,6 +8,8 @@ import { AppDataSource } from "./database/data-source";
 import "./cron-tasks/restock-unprchased-tickets";
 import { correlationIdMiddleware } from "./middlewares/correlationId";
 import { errorHandlingMiddleware } from "./middlewares/errorHandling";
+import { swaggerSpec } from "./libs/swagger";
+import swaggerUi from "swagger-ui-express";
 
 const app = express();
 const port = 3000;
@@ -25,7 +27,10 @@ app.use("/concerts", concertRoute);
 app.use("/reserves", reservationRoute);
 app.use("/purchases",purchaseRoute);
 
+app.use ("/api-docs", swaggerUi.serve,swaggerUi.setup(swaggerSpec));
+
 app.use(errorHandlingMiddleware);
+
 
 
 
