@@ -5,17 +5,6 @@ import { getLogger } from "../libs/logger";
 
 const router = Router();
 
-/**
- * @openapi
- * /concerts:
- *   get:
- *     summary: Getting all concerts
- *     
- *     responses:
- *       200:
- *         description: Getting all concerts successfully
- */
-
 router.get("/", async (req, res) => {
   const concerts = await AppDataSource.getRepository(Concert).find();
   res.json(concerts);

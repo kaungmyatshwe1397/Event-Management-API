@@ -1,0 +1,52 @@
+openapi: 3.0.0
+info:
+  title: Event Management API
+  version: 1.0.0
+  description: API documentation for Event Management
+
+servers:
+  - url: http://localhost:3000
+    description: local development server
+
+paths:
+  /concerts:
+    get:
+      summary: Getting all concerts
+      tags: 
+        - Concerts 
+      responses:
+        '200':
+          description: Getting all concerts successfully 
+
+  /reserves:
+    post:
+      summary: Reserve a concert ticket 
+      tags:
+        - Reservation
+      requestBody:
+        required: true 
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: integer
+                  example: 1
+                concertId:
+                  type: integer
+                  example: 1
+                quantity:
+                  type: integer
+                  example: 5
+      responses:
+        '200':
+          description: Ticket reserved successfully
+        '409':
+          description: Conflict - Concert does not exist OR not enough tickets available
+        '429':
+          description: Too many request  
+        '500':
+          description: Internal Server Error
+        
+        

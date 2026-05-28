@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only --watch docs src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "//": "when you use **migration:generate** script, use it like this =>                        **npm run migration:generate --src/migrations/(custom-name)**",
@@ -34,6 +34,7 @@
     "swagger-ui-express": "^5.0.1",
     "typeorm": "^1.0.0",
     "uuid": "^14.0.0",
+    "yamljs": "^0.3.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -47,6 +48,7 @@
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/uuid": "^10.0.0",
+    "@types/yamljs": "^0.2.34",
     "ts-node-dev": "^2.0.0",
     "typescript": "^6.0.3"
   }

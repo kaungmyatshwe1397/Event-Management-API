@@ -4,15 +4,15 @@ import { Ticket } from "../entities/ticket";
 import { LessThan } from "typeorm";
 import { Concert } from "../entities/concert";
 
-// Check for every 1 min
-cron.schedule("*/1 * * * *", async () => {
+// Check for every 10 min
+cron.schedule("*/10 * * * *", async () => {
   console.log("Checking ticket reservation state ...");
 
-  // Find pending ticket that reserved 3 min ago
+  // Find pending ticket that reserved 15 min ago
   const unpurchasedTickets = await AppDataSource.getRepository(Ticket).find({
     where: {
       status: "PENDING",
-      createAt: LessThan(new Date(Date.now() - 3 * 60 * 1000)),
+      createAt: LessThan(new Date(Date.now() - 15 * 60 * 1000)),
     },
   });
 
