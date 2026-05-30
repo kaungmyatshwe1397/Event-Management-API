@@ -1,0 +1,35 @@
+# Compose files are similar to a manager that run all services
+# Wihtout compose file , we will need to run multiple or long docker cmd
+# Compose file also create network which serivces or container inside this file can connect each other
+# Current we have redis which are using docker image for redis container
+# And Our API which is build by our docker image
+# Without compose file, we will need to run multiple or long docker cmds:
+# 1. Create Network: docker network create my-network
+# 2. For redis:      docker run -d --name redis --network my-network redis
+# 3. For API:        docker run --rm -p 3000:3000 --network my-network -e REDIS_HOST=redis event-management-api
+
+services:
+  redis:
+    image: redis # Use existing image
+
+  api:
+
+    container_name: event-management-api
+    
+    build: . # Build form our docker file
+
+    ports:
+      - "3000:3000" # "host:container"
+
+    environment:
+      - REDIS_HOST=redis # KEY=value
+
+    env_file:
+      - .env # For other variables like JWT
+
+    depends_on:
+      - redis # other-service-name
+
+    
+    volumes:
+      - ./database.sqlite:/app/database.sqlite   # "map my local database.sqlite into the container at /app/database.sqlite"  
