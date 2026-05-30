@@ -5,7 +5,7 @@ import { LessThan } from "typeorm";
 import { Concert } from "../entities/concert";
 
 // Check for every 10 min
-cron.schedule("*/10 * * * *", async () => {
+const restockCronTask = cron.schedule("*/10 * * * *", async () => {
   console.log("Checking ticket reservation state ...");
 
   // Find pending ticket that reserved 15 min ago
@@ -33,3 +33,8 @@ cron.schedule("*/10 * * * *", async () => {
     }
   }
 });
+
+export const stopCrontask = ()=>{
+  restockCronTask.stop();
+  console.log("Ticket restocking cron task is shut down since server start start gracefully shutting down..")
+}
