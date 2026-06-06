@@ -1,0 +1,24 @@
+name: Deploy
+
+on: # Action is trigger when i push new changes/updates into github branch main
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0      
+        with:
+          host: ${{secrets.EC2_HOST}}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |  # cd into our repo into server , pull updates from git and build new docker image and run
+           cd Event-Management-API  
+           git pull
+           docker compose up -d --build
+
+
+
