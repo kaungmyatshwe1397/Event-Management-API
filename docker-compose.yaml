@@ -12,6 +12,15 @@ services:
   redis:
     image: redis # Use existing image
 
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  
+
   api:
 
     container_name: event-management-api
@@ -29,7 +38,13 @@ services:
 
     depends_on:
       - redis # other-service-name
+      - postgres
 
     
-    volumes:
-      - ./database.sqlite:/app/database.sqlite   # "map my local database.sqlite into the container at /app/database.sqlite"  
+    #volumes:
+      #- ./database.sqlite:/app/database.sqlite   # "map my local database.sqlite into the container at /app/database.sqlite"  
+volumes:
+  postgres_data:
+ 
+
+        

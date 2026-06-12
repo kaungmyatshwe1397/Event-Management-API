@@ -3,11 +3,14 @@ import { Concert } from "../entities/concert";
 import { Ticket } from "../entities/ticket";
 import { User } from "../entities/user";
 
-
 export const AppDataSource = new DataSource({
-    type: 'better-sqlite3',
-  database: 'database.sqlite',
-  entities: [Concert,Ticket,User],
+  type: "postgres",
+  host: process.env.DB_HOST || "localhost",
+  port: parseInt(process.env.DB_PORT || "5432"),
+  username: process.env.DB_USER || "postgres",
+  password: process.env.DB_PASSWORD || "postgres",
+  database: process.env.DB_NAME || "eventdb",
+  entities: [Concert, Ticket, User],
   migrations: [__dirname + "/../migrations/**/*{.js,.ts}"],
   synchronize: false,
-})
+});
