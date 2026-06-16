@@ -7,6 +7,8 @@ info:
 servers:
   - url: http://localhost:3000
     description: local development server
+  - url: https://event-management-api.dynv6.net/ 
+    description: production server 
 
 paths:
   /concerts:
