@@ -5,14 +5,14 @@ import reservationRoute from "./routes/reservation.route";
 import purchaseRoute from "./routes/purchase.route";
 import "reflect-metadata";
 import { AppDataSource } from "./database/data-source";
-import "./cron-tasks/restock-unprchased-tickets";
+import "./cron-tasks/restock-unpurchased-tickets";
 import { correlationIdMiddleware } from "./middlewares/correlationId";
 import { errorHandlingMiddleware } from "./middlewares/errorHandling";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import path from "path";
 import { Server } from "http";
-import { stopCrontask } from "./cron-tasks/restock-unprchased-tickets";
+import { stopCrontask } from "./cron-tasks/restock-unpurchased-tickets";
 
 const app = express();
 const port = 3000;
